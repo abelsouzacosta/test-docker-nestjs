@@ -6,14 +6,17 @@ import {
   HttpStatus,
   Param,
   Post,
+  Query,
 } from '@nestjs/common';
 
 @Controller('coffees')
 export class CoffeesController {
   @Get()
   @HttpCode(HttpStatus.OK)
-  getAll(): string {
-    return `this method returns all coffees in the database`;
+  getAll(@Query() paginationQuery): string {
+    const { limit, offset } = paginationQuery;
+
+    return `this method returns ${limit} coffees with offset ${offset}`;
   }
 
   @Get(':id')
