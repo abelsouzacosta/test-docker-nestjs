@@ -1,33 +1,46 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
   Param,
+  Patch,
   Post,
-  Query,
 } from '@nestjs/common';
+import { CoffeesService } from './coffees.service';
+import { CreateCoffeeDto } from './dto/create-coffee.dto';
 
 @Controller('coffees')
 export class CoffeesController {
+  constructor(private readonly service: CoffeesService) {}
+
   @Get()
   @HttpCode(HttpStatus.OK)
-  getAll(@Query() paginationQuery): string {
-    const { limit, offset } = paginationQuery;
-
-    return `this method returns ${limit} coffees with offset ${offset}`;
+  getAll() {
+    return this.service.getAll();
   }
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)
-  getOne(@Param('id') id: string): string {
-    return `this method return the ${id} instance`;
+  findOne(@Param('id') id: string) {
+    return this.service.findOne(id);
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() data: any) {
-    return data;
+  create(@Body() body: CreateCoffeeDto) {
+    return this.service.create(body);
+  }
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateCoffeeDto: any) {
+    return this.service.update(id, updateCoffeeDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.service.remove(id);
   }
 }
